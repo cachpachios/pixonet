@@ -1,0 +1,8 @@
+C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Debug\Tester.exe.config
+C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Debug\Tester.exe
+C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Debug\Tester.pdb
+C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Debug\PixoNet.dll
+C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Debug\PixoNet.pdb
+C:\Users\Caspar\Documents\pixonetc#\Tester\obj\Debug\Tester.csprojResolveAssemblyReference.cache
+C:\Users\Caspar\Documents\pixonetc#\Tester\obj\Debug\Tester.exe
+C:\Users\Caspar\Documents\pixonetc#\Tester\obj\Debug\Tester.pdb

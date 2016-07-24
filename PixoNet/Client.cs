@@ -1,11 +1,12 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 
 namespace PixoNet
 {
-    class Client
+    public class Client
     {
         private TcpClient client;
         private Thread thread;
@@ -35,11 +36,14 @@ namespace PixoNet
         {
             this.client = new TcpClient(ADDRESS, PORT);
             thread = new Thread(ThreadRun);
+            this.reader = new BinaryReader(client.GetStream());
+            this.writer = new BinaryWriter(client.GetStream());
             thread.Start();
         }
 
         private void ThreadRun()
         {
+            isActive = true;
             while(isActive)
             {
                 int nextByte = client.GetStream().ReadByte();
@@ -50,15 +54,21 @@ namespace PixoNet
                 }
                 else
                 {
-                    protocol.CreateInstance(nextByte);
+                    Packet p = protocol.CreateInstance(nextByte);
+                    if(p != null)
+                    {
+                        p.Read(reader);
+                        inboundQueue.Enqueue(p);
+                    }
                 }
                 Thread.Sleep(15);
             }
+            Console.WriteLine("End");
         }
 
         public void Write(Packet packet)
         {
-            writer.Write((byte) packet.getID());
+            client.GetStream().WriteByte((byte) packet.getID());
             packet.Write(writer);
         }
 

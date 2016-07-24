@@ -2,7 +2,7 @@
 
 namespace PixoNet
 {
-    abstract class Packet
+    public abstract class Packet
     {
         public abstract int getID();
 

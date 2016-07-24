@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PixoNet", "PixoNet.csproj", "{57277D7B-E5CB-45B5-9BBF-DB57F7C131D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "..\Tester\Tester.csproj", "{E0F42472-1ECE-4D5D-8825-537442F9756E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{57277D7B-E5CB-45B5-9BBF-DB57F7C131D3}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{57277D7B-E5CB-45B5-9BBF-DB57F7C131D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57277D7B-E5CB-45B5-9BBF-DB57F7C131D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0F42472-1ECE-4D5D-8825-537442F9756E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0F42472-1ECE-4D5D-8825-537442F9756E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0F42472-1ECE-4D5D-8825-537442F9756E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0F42472-1ECE-4D5D-8825-537442F9756E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

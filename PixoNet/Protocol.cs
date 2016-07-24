@@ -1,6 +1,6 @@
 ﻿namespace PixoNet
 {
-    abstract class Protocol
+    public abstract class Protocol
     {
         public abstract Packet CreateInstance(int id);
     }
