@@ -46,6 +46,7 @@ namespace PixoNet
             isActive = true;
             while(isActive)
             {
+                Console.WriteLine("1");
                 int nextByte = client.GetStream().ReadByte();
                 if (nextByte == -1)
                 {
@@ -63,7 +64,6 @@ namespace PixoNet
                 }
                 Thread.Sleep(15);
             }
-            Console.WriteLine("End");
         }
 
         public void Write(Packet packet)
