@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -10,9 +11,6 @@ namespace PixoNet
     {
         private TcpClient client;
         private Thread thread;
-
-        private BinaryWriter writer;
-        private BinaryReader reader;
 
         private ConcurrentQueue<Packet> inboundQueue;
 
@@ -32,12 +30,10 @@ namespace PixoNet
             this.inboundQueue = new ConcurrentQueue<Packet>();
         }
 
-        public void Establish()
+        public void Establish(bool useBigEndian)
         {
             this.client = new TcpClient(ADDRESS, PORT);
             thread = new Thread(ThreadRun);
-            this.reader = new BinaryReader(client.GetStream());
-            this.writer = new BinaryWriter(client.GetStream());
             thread.Start();
         }
 
@@ -46,7 +42,9 @@ namespace PixoNet
             isActive = true;
             while(isActive)
             {
-                Console.WriteLine("1");
+                Thread.Sleep(5);
+                if (!client.GetStream().DataAvailable) continue;
+
                 int nextByte = client.GetStream().ReadByte();
                 if (nextByte == -1)
                 {
@@ -55,21 +53,33 @@ namespace PixoNet
                 }
                 else
                 {
-                    Packet p = protocol.CreateInstance(nextByte);
+                    byte[] lBuf = new byte[4];
+                    lBuf[0] = (byte) (nextByte & 0xFF);
+                    client.GetStream().Read(lBuf, 1, 3);
+                    int l = BitConverter.ToInt32(ensureBigEndian(lBuf),0);
+                    Console.Out.WriteLine("Packet Length: " + l);
+                    byte[] bBuf = new byte[l];
+                    client.GetStream().Read(bBuf, 0, l);
+                    ByteArray buf = new ByteArray(bBuf);
+
+                    Packet p = protocol.CreateInstance(buf.ReadUInt16());
                     if(p != null)
                     {
-                        p.Read(reader);
+                        p.Read(buf);
                         inboundQueue.Enqueue(p);
                     }
                 }
-                Thread.Sleep(15);
             }
         }
 
         public void Write(Packet packet)
         {
-            client.GetStream().WriteByte((byte) packet.getID());
-            packet.Write(writer);
+            ByteList buf = new ByteList(packet.expectedWriteSize() + 16);
+            buf.Write(packet.getID());
+            packet.Write(buf);
+
+            client.GetStream().Write(ensureBigEndian(BitConverter.GetBytes(buf.GetLength())), 0, 4);
+            client.GetStream().Write(buf.ToArray(),0, buf.GetLength());
         }
 
         public void Flush()
@@ -80,7 +90,7 @@ namespace PixoNet
         public void Close()
         {
             this.isActive = false;
-            this.client.GetStream().Close();
+            client.GetStream().Close();
             this.client.Close();
         }
 
@@ -100,6 +110,13 @@ namespace PixoNet
             if (this.inboundQueue.TryDequeue(out p))
                 return p;
             return null;
+        }
+
+        private byte[] ensureBigEndian(byte[] input)
+        {
+            if (BitConverter.IsLittleEndian)
+                return input.Reverse().ToArray();
+            else return input;
         }
     }
 }

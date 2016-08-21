@@ -6,3 +6,5 @@ C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Debug\PixoNet.pdb
 C:\Users\Caspar\Documents\pixonetc#\Tester\obj\Debug\Tester.csprojResolveAssemblyReference.cache
 C:\Users\Caspar\Documents\pixonetc#\Tester\obj\Debug\Tester.exe
 C:\Users\Caspar\Documents\pixonetc#\Tester\obj\Debug\Tester.pdb
+C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Debug\System.Threading.dll
+C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Debug\System.Threading.xml

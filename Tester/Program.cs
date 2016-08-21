@@ -14,10 +14,10 @@ namespace Tester
         {
             Console.WriteLine("Starting");
             Client client = new Client(new TestProtocol(), "localhost", 5455);
-            client.Establish();
+            client.Establish(true);
 
             IntroducePacket intro = new IntroducePacket();
-            intro.protocol = 1;
+            intro.protocol = 12345;
             intro.clientID = 123;
             intro.authID = 2378123723;
 
@@ -26,7 +26,11 @@ namespace Tester
 
             while (true)
             {
-                if (client.alive() == false) break;
+                if (client.alive() == false)
+                {
+                    Console.WriteLine("Closed");
+                    break;
+                }
                 Thread.Sleep(50);
                 if (client.hasPacket())
                 {
@@ -37,6 +41,8 @@ namespace Tester
                 }
             }
             client.Close();
+
+            while (true) Thread.Sleep(10);
         }
     }
 }

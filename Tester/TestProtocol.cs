@@ -25,12 +25,12 @@ namespace Tester
         public int clientID;
         public long authID;
 
-        public override int getID()
+        public override ushort getID()
         {
             return 0;
         }
 
-        public override void Write(BinaryWriter writer)
+        public override void Write(ByteList writer)
         {
             writer.Write(protocol);
             writer.Write(clientID);
@@ -43,12 +43,12 @@ namespace Tester
     {
         public byte status;
 
-        public override int getID()
+        public override ushort getID()
         {
             return 0;
         }
 
-        public override void Read(BinaryReader reader)
+        public override void Read(ByteArray reader)
         {
             status = reader.ReadByte();
         }
