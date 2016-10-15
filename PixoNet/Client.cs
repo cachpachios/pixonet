@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -12,7 +12,8 @@ namespace PixoNet
         private TcpClient client;
         private Thread thread;
 
-        private ConcurrentQueue<Packet> inboundQueue;
+        private Queue<Packet> inboundQueue;
+        private Object queueLock;
 
         public readonly string ADDRESS;
         public readonly int PORT;
@@ -27,7 +28,7 @@ namespace PixoNet
             this.ADDRESS = ip;
             this.PORT = port;
 
-            this.inboundQueue = new ConcurrentQueue<Packet>();
+            this.inboundQueue = new Queue<Packet>();
         }
 
         public void Establish(bool useBigEndian)
@@ -66,7 +67,8 @@ namespace PixoNet
                     if(p != null)
                     {
                         p.Read(buf);
-                        inboundQueue.Enqueue(p);
+                        lock(queueLock)
+                            inboundQueue.Enqueue(p);
                     }
                 }
             }
@@ -101,15 +103,15 @@ namespace PixoNet
 
         public bool hasPacket()
         {
-            return !inboundQueue.IsEmpty;
+            return inboundQueue.Count > 0;
         }
 
         public Packet PollPacket()
         {
             Packet p;
-            if (this.inboundQueue.TryDequeue(out p))
-                return p;
-            return null;
+            lock (queueLock)
+                p = inboundQueue.Dequeue();
+            return p;
         }
 
         private byte[] ensureBigEndian(byte[] input)

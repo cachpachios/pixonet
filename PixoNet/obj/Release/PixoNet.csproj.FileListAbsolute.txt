@@ -5,3 +5,8 @@ C:\Users\Caspar\Documents\pixonetc#\PixoNet\obj\Release\PixoNet.pdb
 C:\Users\Caspar\Documents\pixonetc#\PixoNet\bin\Release\System.Threading.dll
 C:\Users\Caspar\Documents\pixonetc#\PixoNet\bin\Release\System.Threading.xml
 C:\Users\Caspar\Documents\pixonetc#\PixoNet\obj\Release\PixoNet.csprojResolveAssemblyReference.cache
+C:\Users\Caspar\Documents\pixonetc\PixoNet\obj\Release\PixoNet.csprojResolveAssemblyReference.cache
+C:\Users\Caspar\Documents\pixonetc\PixoNet\bin\Release\PixoNet.dll
+C:\Users\Caspar\Documents\pixonetc\PixoNet\bin\Release\PixoNet.pdb
+C:\Users\Caspar\Documents\pixonetc\PixoNet\obj\Release\PixoNet.dll
+C:\Users\Caspar\Documents\pixonetc\PixoNet\obj\Release\PixoNet.pdb
