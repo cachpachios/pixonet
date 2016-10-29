@@ -13,7 +13,7 @@ namespace Tester
         static void Main(string[] args)
         {
             Console.WriteLine("Starting");
-            Client client = new Client(new TestProtocol(), "localhost", 5455);
+            Client client = new Client(new TestProtocol(), "localhost", 7331);
             client.Establish(true);
 
             IntroducePacket intro = new IntroducePacket();

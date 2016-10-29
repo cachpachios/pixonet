@@ -21,7 +21,7 @@ namespace Tester
 
     public class IntroducePacket : Packet
     {
-        public ushort protocol;
+        public int protocol;
         public int clientID;
         public long authID;
 

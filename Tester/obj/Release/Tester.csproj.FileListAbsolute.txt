@@ -8,3 +8,11 @@ C:\Users\Caspar\Documents\pixonetc#\Tester\obj\Release\Tester.exe
 C:\Users\Caspar\Documents\pixonetc#\Tester\obj\Release\Tester.pdb
 C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Release\System.Threading.dll
 C:\Users\Caspar\Documents\pixonetc#\Tester\bin\Release\System.Threading.xml
+C:\Users\Caspar\Documents\pixonetc\Tester\bin\Release\Tester.exe.config
+C:\Users\Caspar\Documents\pixonetc\Tester\bin\Release\Tester.exe
+C:\Users\Caspar\Documents\pixonetc\Tester\bin\Release\Tester.pdb
+C:\Users\Caspar\Documents\pixonetc\Tester\bin\Release\PixoNet.dll
+C:\Users\Caspar\Documents\pixonetc\Tester\bin\Release\PixoNet.pdb
+C:\Users\Caspar\Documents\pixonetc\Tester\obj\Release\Tester.csprojResolveAssemblyReference.cache
+C:\Users\Caspar\Documents\pixonetc\Tester\obj\Release\Tester.exe
+C:\Users\Caspar\Documents\pixonetc\Tester\obj\Release\Tester.pdb

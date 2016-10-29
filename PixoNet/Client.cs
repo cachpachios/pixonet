@@ -24,6 +24,7 @@ namespace PixoNet
 
         public Client(Protocol protocol, string ip, int port)
         {
+            queueLock = new object();
             this.protocol = protocol;
             this.ADDRESS = ip;
             this.PORT = port;
@@ -40,11 +41,10 @@ namespace PixoNet
 
         private void ThreadRun()
         {
-            isActive = true;
+            this.isActive = true;
             while(isActive)
             {
                 Thread.Sleep(5);
-                if (!client.GetStream().DataAvailable) continue;
 
                 int nextByte = client.GetStream().ReadByte();
                 if (nextByte == -1)
