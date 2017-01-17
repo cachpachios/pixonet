@@ -35,6 +35,7 @@ namespace PixoNet
         public void Establish(bool useBigEndian)
         {
             this.client = new TcpClient(ADDRESS, PORT);
+            this.client.NoDelay = true;
             thread = new Thread(ThreadRun);
             thread.Start();
         }
