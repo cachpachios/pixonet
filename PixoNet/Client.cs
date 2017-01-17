@@ -58,7 +58,6 @@ namespace PixoNet
                     lBuf[0] = (byte) (nextByte & 0xFF);
                     client.GetStream().Read(lBuf, 1, 3);
                     int l = BitConverter.ToInt32(ensureBigEndian(lBuf),0);
-                    Console.Out.WriteLine("Packet Length: " + l);
                     byte[] bBuf = new byte[l];
                     client.GetStream().Read(bBuf, 0, l);
                     ByteArray buf = new ByteArray(bBuf);
@@ -76,12 +75,11 @@ namespace PixoNet
 
         public void Write(Packet packet)
         {
-            ByteList buf = new ByteList(packet.expectedWriteSize() + 16);
+            ByteList buf = new ByteList(packet.expectedWriteSize() + 8);
             buf.Write(packet.getID());
             packet.Write(buf);
-
-            client.GetStream().Write(ensureBigEndian(BitConverter.GetBytes(buf.GetLength())), 0, 4);
-            client.GetStream().Write(buf.ToArray(),0, buf.GetLength());
+            byte[] a = buf.ToArray(buf.GetLength());
+            client.GetStream().Write(a,0,a.Length);
         }
 
         public void Flush()

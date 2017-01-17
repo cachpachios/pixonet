@@ -74,5 +74,27 @@ namespace PixoNet
         {
             return buf.ToArray();
         }
+
+        public byte[] ToArray(int prefix)
+        {
+            byte[] arr = new byte[GetLength() + 4];
+            byte[] prefixBuf = BitConverter.GetBytes(prefix);
+            if (BitConverter.IsLittleEndian)
+            {
+                arr[0] = prefixBuf[3];
+                arr[1] = prefixBuf[2];
+                arr[2] = prefixBuf[1];
+                arr[3] = prefixBuf[0];
+            }
+            else
+            {
+                arr[0] = prefixBuf[0];
+                arr[1] = prefixBuf[1];
+                arr[2] = prefixBuf[2];
+                arr[3] = prefixBuf[3];
+            }
+            ToArray().CopyTo(arr, 4);
+            return arr;
+        }
     }
 }
