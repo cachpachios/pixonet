@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PixoNet
 {
-    public class ByteList
+    public class ByteList //TODO: Not use an arraylist :I
     {
         private List<byte> buf;
         public ByteList(int expectedSize)
@@ -93,7 +93,7 @@ namespace PixoNet
                 arr[2] = prefixBuf[2];
                 arr[3] = prefixBuf[3];
             }
-            ToArray().CopyTo(arr, 4);
+            Buffer.BlockCopy(ToArray(), 0, arr, 4, GetLength());
             return arr;
         }
     }

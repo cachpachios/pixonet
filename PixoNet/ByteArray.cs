@@ -76,6 +76,11 @@ namespace PixoNet
             position += amount;
         }
 
+        public void SkipBytes(int amount)
+        {
+            position += amount;
+        }
+
         public int GetBytesRemaining()
         {
             return buffer.Length - position;
