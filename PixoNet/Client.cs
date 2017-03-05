@@ -37,6 +37,8 @@ namespace PixoNet
             this.client = new TcpClient(ADDRESS, PORT);
             this.client.NoDelay = true;
             thread = new Thread(ThreadRun);
+            thread.IsBackground = true;
+            thread.Priority = ThreadPriority.AboveNormal;
             thread.Start();
         }
 
@@ -126,11 +128,35 @@ namespace PixoNet
             return inboundQueue.Count > 0;
         }
 
+        public int GetQueuedPacketAmount()
+        {
+            return inboundQueue.Count;
+        }
+
+        public void clearQueue()
+        {
+            lock( queueLock)
+                inboundQueue.Clear();
+        }
+
         public Packet PollPacket()
         {
             Packet p;
             lock (queueLock)
                 p = inboundQueue.Dequeue();
+            return p;
+        }
+
+        public Packet[] PollAll()
+        {
+            Packet[] p;
+
+            lock(queueLock)
+            {
+                p = inboundQueue.ToArray();
+                inboundQueue.Clear();
+            }
+
             return p;
         }
 
