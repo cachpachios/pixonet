@@ -52,6 +52,7 @@
     <Compile Include="ByteArray.cs" />
     <Compile Include="ByteList.cs" />
     <Compile Include="ByteStream.cs" />
+    <Compile Include="ByteUtils.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

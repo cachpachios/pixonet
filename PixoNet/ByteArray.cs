@@ -13,6 +13,7 @@ namespace PixoNet
         public ByteArray(byte[] buffer)
         {
             this.buffer = buffer;
+            position = 0;
         }
 
         public byte ReadByte()
@@ -74,6 +75,16 @@ namespace PixoNet
         {
             Array.Copy(buffer, position, destination, destinationIndex, amount);
             position += amount;
+        }
+
+        public string ReadString()
+        {
+            return Encoding.UTF8.GetString(ReadBytes(ReadUInt16()));
+        }
+
+        public string ReadShortString()
+        {
+            return Encoding.UTF8.GetString(ReadBytes(ReadByte()));
         }
 
         public void SkipBytes(int amount)

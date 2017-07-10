@@ -53,9 +53,26 @@ namespace PixoNet
             Write(*(int*)(&v));
         }
 
+        public unsafe void Write(double v)
+        {
+            Write(*(long*)(&v));
+        }
+
         public void Write(byte[] array)
         {
             buf.AddRange(array);
+        }
+
+        public void Write(string str)
+        {
+            Write((ushort)str.Length);
+            Write(Encoding.UTF8.GetBytes(str));
+        }
+
+        public void WriteShortString(string str)
+        {
+            Write((byte)str.Length);
+            Write(Encoding.UTF8.GetBytes(str));
         }
 
         private byte[] ensureBigEndian(byte[] input)
