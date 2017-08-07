@@ -91,6 +91,7 @@ namespace PixoNet
             }
             catch (IOException e)
             {
+                e = null;
                 this.isActive = false;
                 Close();
             }
@@ -99,11 +100,18 @@ namespace PixoNet
         public void Write(Packet packet)
         {
             if (!isActive) return;
-            ByteList buf = new ByteList(packet.expectedWriteSize() + 8);
+            ByteList buf = new ByteList(packet.expectedWriteSize() + 8, 64);
+            buf.SkipBytes(4); // Reserve space for length prefix
             buf.Write(packet.getID());
             packet.Write(buf);
-            byte[] a = buf.ToArray(buf.GetLength());
-            client.GetStream().Write(a, 0, a.Length);
+            
+            int pos = buf.GetBufferPosition(); // Store current buffer position
+            buf.ToBufferPos(0); // Move to the position for the length prefix
+            buf.Write(pos - 4); // Write the length prefix
+            buf.ToBufferPos(pos); // Move back to write all data...
+
+            // Write the buffer to the streamSS
+            buf.WriteToStream(client.GetStream());
         }
 
         public void Flush()

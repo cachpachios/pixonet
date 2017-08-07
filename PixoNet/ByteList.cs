@@ -1,95 +1,118 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace PixoNet
 {
     public class ByteList //TODO: Not use an arraylist :I
     {
-        private List<byte> buf;
-        public ByteList(int expectedSize)
+
+        byte[] buffer;
+        int bufferPos;
+        int increment;
+
+        public ByteList(int initialSize, int expandAmount)
         {
-            this.buf = new List<byte>();
+            this.buffer = new byte[initialSize];
+            this.increment = expandAmount;
+            this.bufferPos = 0;
         }
 
-        public void Write(byte v)
+        public void Write(byte[] buf)
         {
-            buf.Add(v);
+            Write(buf, 0, buf.Length);
         }
 
-        public void Write(short v)
+        public void Write(byte[] buf, int offset, int count)
         {
-            Write(ensureBigEndian(BitConverter.GetBytes(v)));
+            if (buffer.Length - bufferPos >= count)
+            {
+                Buffer.BlockCopy(buf, offset, buffer, bufferPos, count);
+                bufferPos += buf.Length;
+            }
+            else
+            {
+                byte[] newBuffer = new byte[buffer.Length + buf.Length + increment];
+                Buffer.BlockCopy(buffer, 0, newBuffer, 0, bufferPos);
+                Buffer.BlockCopy(buf, offset, newBuffer, bufferPos, count);
+                buffer = newBuffer;
+            }
         }
 
-        public void Write(int v)
+        private void EnsureBuffer(int count)
         {
-            Write(ensureBigEndian(BitConverter.GetBytes(v)));
+            if (buffer.Length - bufferPos >= count) return;
+            byte[] newBuffer = new byte[buffer.Length + increment + count];
+            Buffer.BlockCopy(buffer, 0, newBuffer, 0, bufferPos);
+            buffer = newBuffer;
+        }
+        
+        private void WriteByteUnsafe(byte b)
+        {
+            buffer[bufferPos++] = b;
         }
 
-        public void Write(long v)
+        public void Write(short value)
         {
-            Write(ensureBigEndian(BitConverter.GetBytes(v)));
+            EnsureBuffer(2);
+            WriteByteUnsafe((byte)(0xff & value >> 8));
+            WriteByteUnsafe((byte)(0xff & value));
         }
 
-        public void Write(ushort v)
+        public void Write(int value)
         {
-            Write(ensureBigEndian(BitConverter.GetBytes(v)));
+            EnsureBuffer(4);
+            WriteByteUnsafe((byte)(0xff & value >> 24));
+            WriteByteUnsafe((byte)(0xff & value >> 16));
+            WriteByteUnsafe((byte)(0xff & value >> 8));
+            WriteByteUnsafe((byte)(0xff & value));
         }
 
-        public void Write(uint v)
+        public void Write(long value)
         {
-            Write(ensureBigEndian(BitConverter.GetBytes(v)));
-        }
-
-        public void Write(ulong v)
-        {
-            Write(ensureBigEndian(BitConverter.GetBytes(v)));
-        }
-
-        public unsafe void Write(float v)
-        {
-            Write(*(int*)(&v));
-        }
-
-        public unsafe void Write(double v)
-        {
-            Write(*(long*)(&v));
-        }
-
-        public void Write(byte[] array)
-        {
-            buf.AddRange(array);
+            EnsureBuffer(8);
+            WriteByteUnsafe((byte)(0xff & value >> 56));
+            WriteByteUnsafe((byte)(0xff & value >> 48));
+            WriteByteUnsafe((byte)(0xff & value >> 40));
+            WriteByteUnsafe((byte)(0xff & value >> 32));
+            WriteByteUnsafe((byte)(0xff & value >> 24));
+            WriteByteUnsafe((byte)(0xff & value >> 16));
+            WriteByteUnsafe((byte)(0xff & value >> 8));
+            WriteByteUnsafe((byte)(0xff & value));
         }
 
         public void Write(string str)
         {
-            Write((ushort)str.Length);
+            EnsureBuffer(str.Length + 2);
+            ushort value = (ushort)str.Length;
+            WriteByteUnsafe((byte)(0xff & value >> 8));
+            WriteByteUnsafe((byte)(0xff & value));
             Write(Encoding.UTF8.GetBytes(str));
         }
 
-        public void WriteShortString(string str)
+        public unsafe void Write(float value)
         {
-            Write((byte)str.Length);
-            Write(Encoding.UTF8.GetBytes(str));
+            Write(*(int*)(&value));
         }
 
-        private byte[] ensureBigEndian(byte[] input)
+        public unsafe void Write(double value)
         {
-            if (BitConverter.IsLittleEndian)
-                return input.Reverse().ToArray();
-            else return input;
+            Write(*(long*)(&value));
         }
 
         public int GetLength()
         {
-            return buf.Count;
+            return bufferPos;
         }
 
         public byte[] ToArray()
         {
-            return buf.ToArray();
+            byte[] buf = new byte[bufferPos];
+            Buffer.BlockCopy(buffer, 0, buf, 0, bufferPos);
+            return buf;
         }
 
         public byte[] ToArray(int prefix)
@@ -110,8 +133,29 @@ namespace PixoNet
                 arr[2] = prefixBuf[2];
                 arr[3] = prefixBuf[3];
             }
-            Buffer.BlockCopy(ToArray(), 0, arr, 4, GetLength());
+            Buffer.BlockCopy(buffer, 0, arr, 4, bufferPos + 4);
             return arr;
+        }
+
+        public int GetBufferPosition()
+        {
+            return bufferPos;
+        }
+
+        public void SkipBytes(int count)
+        {
+            EnsureBuffer(count);
+            bufferPos += count;
+        }
+
+        public void ToBufferPos(int pos)
+        {
+            bufferPos = pos;
+        }
+
+        public void WriteToStream(Stream s)
+        {
+            s.Write(buffer, 0, bufferPos);
         }
     }
 }
